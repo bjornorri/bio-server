@@ -1,0 +1,19 @@
+{
+  "name": "bio-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bjornorri/bio-server.git"
+  },
+  "author": "Bjorn Orri Saemundsson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bjornorri/bio-server/issues"
+  },
+  "homepage": "https://github.com/bjornorri/bio-server#readme"
+}
