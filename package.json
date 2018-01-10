@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/bjornorri/bio-server/issues"
   },
-  "homepage": "https://github.com/bjornorri/bio-server#readme"
+  "homepage": "https://github.com/bjornorri/bio-server#readme",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "express": "^4.16.2"
+  }
 }
