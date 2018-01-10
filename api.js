@@ -25,6 +25,18 @@ class API {
     }
     return res
   }
+
+  async getShowtimes() {
+    const url = 'http://api.kvikmyndir.is/movies'
+    const res = await this.request(url)
+    return res.data
+  }
+
+  async getComingSoon() {
+    const url = 'http://api.kvikmyndir.is/upcoming';
+    const res = await this.request(url)
+    return res.data
+  }
 }
 
 module.exports = new API()
