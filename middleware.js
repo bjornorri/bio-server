@@ -9,7 +9,8 @@ class Middleware {
     movies = this.filter(movies)
     movies = await this.addBackdrops(movies)
     movies = this.extractTrailers(movies)
-    movies = this.fixNames(movies)
+    movies = this.fixCinemaNames(movies)
+    movies = this.fixPlots(movies)
     return movies
   }
 
@@ -56,7 +57,7 @@ class Middleware {
     return movies
   }
 
-  fixNames(movies) {
+  fixCinemaNames(movies) {
     movies.filter(m => m.showtimes).forEach(m => {
       m.showtimes.forEach(s => {
         s.cinema.name = s.cinema.name
@@ -64,6 +65,13 @@ class Middleware {
           .replace('Kringlubíó', 'Sambíóin Kringlunni')
           .replace('Álfabakki', 'Sambíóin Álfabakka')
       })
+    })
+    return movies
+  }
+
+  fixPlots(movies) {
+    movies.filter(m => m.plot).forEach(m => {
+      m.plot = m.plot.replace(/\n/g, ' ')
     })
     return movies
   }
