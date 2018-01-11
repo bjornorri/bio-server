@@ -38,7 +38,7 @@ class API {
     return res.data
   }
 
-  async getPosters(imdbId) {
+  async getBackdrops(imdbId) {
     const url = `http://api.kvikmyndir.is/images?imdbid=${imdbId}`;
     const res = await this.request(url)
     return res.data

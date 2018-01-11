@@ -1,4 +1,5 @@
 const API = require('./api')
+const middleware = require('./middleware')
 
 
 class Store {
@@ -11,7 +12,8 @@ class Store {
   }
 
   async fetchData() {
-    const [showtimes, comingSoon] = await (Promise.all([API.getShowtimes(), API.getComingSoon()]));
+    const [stData, csData] = await (Promise.all([API.getShowtimes(), API.getComingSoon()]));
+    const [showtimes, comingSoon] = await (Promise.all([middleware.process(stData), middleware.process(csData)]))
     this._showtimes = showtimes
     this._comingSoon = comingSoon
   }
