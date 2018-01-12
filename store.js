@@ -5,8 +5,8 @@ const middleware = require('./middleware')
 class Store {
 
   constructor() {
-    this._showtimes = null
-    this._comingSoon = null
+    this.showtimes = null
+    this.comingSoon = null
     this.fetchData()
     setInterval(() => this.fetchData(), 1000 * 60 * 30);
   }
@@ -14,16 +14,22 @@ class Store {
   async fetchData() {
     const [stData, csData] = await (Promise.all([API.getShowtimes(), API.getComingSoon()]));
     const [showtimes, comingSoon] = await (Promise.all([middleware.processShowtimes(stData), middleware.processComingSoon(csData)]))
-    this._showtimes = showtimes
-    this._comingSoon = comingSoon
+    this.showtimes = showtimes
+    this.comingSoon = comingSoon
   }
 
-  get showtimes() {
-    return this._showtimes
+  async getShowtimes() {
+    if (this.showtimes === null) {
+      await this.fetchData()
+    }
+    return this.showtimes
   }
 
-  get comingSoon() {
-    return this._comingSoon
+  async getComingSoon() {
+    if (this.comingSoon === null) {
+      await this.fetchData()
+    }
+    return this.comingSoon
   }
 }
 
