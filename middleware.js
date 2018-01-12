@@ -90,9 +90,7 @@ class Middleware {
   sortShowtimes(movies) {
     const score = m => {
       let score = m.showtimes.map(s => s.schedule.length).reduce((a, b) => a + b, 0) // Number of screenings.
-      score += m.showtimes.length // Number of cinemas screening m.
-      score /= m.showtimes.length + 1 // Just "average" it.
-      score += m.ratings.imdb / 2 // Make the rating count.
+      score += m.ratings.imdb / 10 // Break ties with rating.
       return score
     }
     return movies.sort((a, b) => score(b) - score(a))
