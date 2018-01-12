@@ -13,7 +13,7 @@ class Store {
 
   async fetchData() {
     const [stData, csData] = await (Promise.all([API.getShowtimes(), API.getComingSoon()]));
-    const [showtimes, comingSoon] = await (Promise.all([middleware.process(stData), middleware.process(csData)]))
+    const [showtimes, comingSoon] = await (Promise.all([middleware.processShowtimes(stData), middleware.processComingSoon(csData)]))
     this._showtimes = showtimes
     this._comingSoon = comingSoon
   }

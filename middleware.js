@@ -1,9 +1,10 @@
 const API = require('./api')
 
+const meanStrategy = true
 
 class Middleware {
 
-  async process(data) {
+  async processMovies(data) {
     let movies = data
     movies = this.modifyStructure(movies)
     movies = this.filter(movies)
@@ -11,6 +12,17 @@ class Middleware {
     movies = this.extractTrailers(movies)
     movies = this.fixCinemaNames(movies)
     movies = this.fixPlots(movies)
+    return movies
+  }
+
+  processShowtimes(data) {
+    let movies = this.processMovies(data)
+    movies = this.sortShowtimes(data)
+    return movies
+  }
+
+  processComingSoon(data) {
+    let movies = this.processMovies(data)
     return movies
   }
 
@@ -74,6 +86,18 @@ class Middleware {
       m.plot = m.plot.replace(/\n/g, ' ')
     })
     return movies
+  }
+
+  sortShowtimes(movies) {
+    // Max number of screenings in one cinema.
+    let score = m => Math.max.apply(Math, m.showtimes.map(s => s.schedule.length))
+    if (meanStrategy) {
+      // Average number of screenings per cinema.
+      score = m => m.showtimes.map(s => s.schedule.length).reduce((a, b) => a + b, 0) / m.showtimes.length
+    }
+    return movies.sort((a, b) => {
+      return score(b) - score(a)
+    })
   }
 }
 
