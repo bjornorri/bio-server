@@ -1,6 +1,5 @@
 const API = require('./api')
 
-const meanStrategy = true
 
 class Middleware {
 
@@ -89,15 +88,14 @@ class Middleware {
   }
 
   sortShowtimes(movies) {
-    // Max number of screenings in one cinema.
-    let score = m => Math.max.apply(Math, m.showtimes.map(s => s.schedule.length))
-    if (meanStrategy) {
-      // Average number of screenings per cinema.
-      score = m => m.showtimes.map(s => s.schedule.length).reduce((a, b) => a + b, 0) / m.showtimes.length
+    const score = m => {
+      let score = m.showtimes.map(s => s.schedule.length).reduce((a, b) => a + b, 0) // Number of screenings.
+      score += m.showtimes.length // Number of cinemas screening m.
+      score /= m.showtimes.length + 1 // Just "average" it.
+      score += m.ratings.imdb / 2 // Make the rating count.
+      return score
     }
-    return movies.sort((a, b) => {
-      return score(b) - score(a)
-    })
+    return movies.sort((a, b) => score(b) - score(a))
   }
 }
 
