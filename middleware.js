@@ -29,6 +29,8 @@ class Middleware {
     movies.forEach(m => {
       m.imdb_id = m.ids.imdb
       m.genres = m.genres.map(g => g.Name)
+      m.directors = m.directors_abridged.map(d => d.name)
+      m.actors = m.actors_abridged.map(a => a.name)
     })
     return movies
   }
