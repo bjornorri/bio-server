@@ -14,9 +14,9 @@ class Middleware {
     return movies
   }
 
-  processShowtimes(data) {
-    let movies = this.processMovies(data)
-    movies = this.sortShowtimes(data)
+  async processShowtimes(data) {
+    let movies = await this.processMovies(data)
+    movies = this.sortShowtimes(movies)
     return movies
   }
 
