@@ -1,3 +1,4 @@
+const moment = require('moment')
 const API = require('./api')
 
 
@@ -16,6 +17,7 @@ class Middleware {
 
   async processShowtimes(data) {
     let movies = await this.processMovies(data)
+    movies = this.parseScreenings(movies)
     movies = this.sortShowtimes(movies)
     return movies
   }
@@ -88,6 +90,36 @@ class Middleware {
   fixPlots(movies) {
     movies.filter(m => m.plot).forEach(m => {
       m.plot = m.plot.replace(/\n/g, ' ')
+    })
+    return movies
+  }
+
+  parseScreenings(movies) {
+    movies.forEach(m => {
+      m.showtimes = m.showtimes.map(s => {
+        return {
+          cinema_name: s.cinema.name,
+          schedule: s.schedule.map(screening => {
+
+            const input = screening.time
+            const roomString = input
+              .replace('VIP P', 'VIP')
+              .replace('3D', '')
+              .replace('2D', '')
+              .replace('ÍSL TAL', '')
+            const matches = roomString.match(/\((.*?)\)/)
+            const room = matches ? matches[1].trim() : null
+
+            return {
+              time: moment(input.substring(0, 5), 'HH:mm'),
+              purchase_url: screening.purchase_url,
+              three_d: input.includes('3D'),
+              icelandic: input.includes('ÍSL TAL'),
+              room: room
+            }
+          })
+        }
+      })
     })
     return movies
   }
