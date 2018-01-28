@@ -44,7 +44,7 @@ class Middleware {
   async addBackdrops(movies) {
     const data = await (Promise.all(movies.map(m => API.getBackdrops(m.imdb_id))))
     const backdrops = data.map((d => Array.isArray(d) ? d[0].results.backdrops[0] : null))
-    const urls = backdrops.map(e => e ? `http://image.tmdb.org/t/p/w1000${e.file_path}` : null)
+    const urls = backdrops.map(e => e ? `http://image.tmdb.org/t/p/w1280${e.file_path}` : null)
     movies.forEach((m, i) => m.backdrop = urls[i] || m.poster)
     return movies
   }
