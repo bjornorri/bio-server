@@ -13,6 +13,7 @@ class Middleware {
     movies = this.fixCinemaNames(movies)
     movies = this.fixPlots(movies)
     movies = this.fixDurations(movies)
+    movies = this.pruneGenres(movies)
     return movies
   }
 
@@ -99,6 +100,15 @@ class Middleware {
     movies.forEach(m => {
       if (m.durationMinutes === 0) {
         m.durationMinutes = null
+      }
+    })
+    return movies
+  }
+
+  pruneGenres(movies) {
+    movies.forEach(m => {
+      if (m.genres.length > 2) {
+        m.genres = m.genres.slice(0, 2)
       }
     })
     return movies
