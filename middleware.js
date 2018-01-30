@@ -12,6 +12,7 @@ class Middleware {
     movies = this.extractTrailers(movies)
     movies = this.fixCinemaNames(movies)
     movies = this.fixPlots(movies)
+    movies = this.fixDurations(movies)
     return movies
   }
 
@@ -90,6 +91,15 @@ class Middleware {
   fixPlots(movies) {
     movies.filter(m => m.plot).forEach(m => {
       m.plot = m.plot.replace(/\n/g, ' ')
+    })
+    return movies
+  }
+
+  fixDurations(movies) {
+    movies.forEach(m => {
+      if (m.durationMinutes === 0) {
+        m.durationMinutes = null
+      }
     })
     return movies
   }
