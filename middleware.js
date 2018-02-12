@@ -24,8 +24,10 @@ class Middleware {
     return movies
   }
 
-  processComingSoon(data) {
-    let movies = this.processMovies(data)
+  async processComingSoon(data) {
+    let movies = await this.processMovies(data)
+    movies = this.extractReleaseDate(movies)
+    movies = this.sortByReleaseDate(movies)
     return movies
   }
 
@@ -144,6 +146,14 @@ class Middleware {
     return movies
   }
 
+  extractReleaseDate(movies) {
+    movies.forEach(m => {
+      m.release_date = m["release-dateIS"] || null
+      delete m["release-dateIS"]
+    })
+    return movies
+  }
+
   sortShowtimes(movies) {
     const score = m => {
       let score = m.showtimes.map(s => s.schedule.length).reduce((a, b) => a + b, 0) // Number of screenings.
@@ -151,6 +161,11 @@ class Middleware {
       return score
     }
     return movies.sort((a, b) => score(b) - score(a))
+  }
+
+  sortByReleaseDate(movies) {
+    movies.sort((a, b) => moment(a.release_date) - moment(b.release_date))
+    return movies
   }
 }
 
