@@ -19,7 +19,10 @@
   "homepage": "https://github.com/bjornorri/bio-server#readme",
   "dependencies": {
     "axios": "^0.17.1",
+    "body-parser": "^1.18.2",
     "express": "^4.16.2",
-    "moment": "^2.20.1"
+    "moment": "^2.20.1",
+    "pg": "^7.4.1",
+    "sequelize": "^4.33.4"
   }
 }
