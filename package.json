@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/bjornorri/bio-server#readme",
   "dependencies": {
+    "apn": "^2.2.0",
     "axios": "^0.17.1",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
