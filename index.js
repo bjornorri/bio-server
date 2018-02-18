@@ -36,7 +36,36 @@ async function run() {
     }
   })
 
-  app.listen(port, () => console.log(`Server listening on port ${port}`))
+  app.post('/notify', async (req, res) => {
+    let status = 400
+    try {
+      const {deviceId, imdbId} = req.body
+      if (deviceId && imdbId) {
+        await db.createNotification(deviceId, imdbId)
+        status = 200
+      }
+    } catch(e) {
+      status = 400
+    } finally {
+      res.sendStatus(status)
+    }
+  })
+
+  app.delete('/notify', async (req, res) => {
+    try {
+      const {deviceId, imdbId} = req.body
+      if (deviceId && imdbId) {
+        await db.deleteNotification(deviceId, imdbId)
+        status = 200
+      }
+    } catch(e) {
+      status = 400
+    } finally {
+      res.sendStatus(status)
+    }
+  })
+
+app.listen(port, () => console.log(`Server listening on port ${port}`))
 }
 
 run()

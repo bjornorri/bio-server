@@ -4,9 +4,9 @@ const Sequelize = require('sequelize')
 const sequelize = new Sequelize(process.env.DATABASE_URL)
 
 const Device = sequelize.define('device', {
-  uuid: {
+  id: {
     type: Sequelize.UUID,
-    unique: true
+    primaryKey: true
   },
   apnsToken: {
     type: Sequelize.STRING,
@@ -33,16 +33,24 @@ class DataBase {
   }
 
   async updateDevice(deviceId, apnsToken) {
-    const device = await Device.findOrCreate({
-      where: {uuid: deviceId},
+    const [device, created] = await Device.findOrCreate({
+      where: {id: deviceId},
       defaults: {apnsToken: apnsToken}
-    }).spread((device, created) => {
-      if (!created) {
-        device.update({apnsToken: apnsToken})
-      }
-      return device
     })
-    return device
+    if (!created) {
+      await device.update({apnsToken: apnsToken})
+    }
+  }
+
+  async createNotification(deviceId, imdbId) {
+    const notification = await Notification.findOrCreate({
+      where: {imdbId: imdbId, deviceId: deviceId}
+    })
+    return notification
+  }
+
+  async deleteNotification(deviceId, imdbId) {
+    await Notification.destroy({where: {imdbId, deviceId}})
   }
 
   disconnect() {
