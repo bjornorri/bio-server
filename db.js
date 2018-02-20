@@ -10,7 +10,8 @@ const Device = sequelize.define('device', {
   },
   apnsToken: {
     type: Sequelize.STRING,
-    unique: true
+    unique: true,
+    allowNull: true
   }
 })
 
@@ -43,6 +44,9 @@ class DataBase {
   }
 
   async createNotification(deviceId, imdbId) {
+    const device = await Device.findOrCreate({
+      where: {id: deviceId}
+    })
     const notification = await Notification.findOrCreate({
       where: {imdbId: imdbId, deviceId: deviceId}
     })
