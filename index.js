@@ -12,12 +12,14 @@ async function run() {
   const port = process.env.PORT || 3000
 
   app.get('/showtimes', async (req, res) => {
-    const movies = await store.getShowtimes()
+    let deviceId = req.query.deviceId || null
+    const movies = await store.getShowtimes(deviceId)
     res.json(movies)
   })
 
-  app.get('/coming_soon', async (req, res) => {
-    const movies = await store.getComingSoon()
+  app.get('/upcoming', async (req, res) => {
+    let deviceId = req.query.deviceId || null
+    const movies = await store.getUpcoming(deviceId)
     res.json(movies)
   })
 
@@ -37,17 +39,17 @@ async function run() {
   })
 
   app.post('/notify', async (req, res) => {
-    let status = 400
     try {
       const {deviceId, imdbId} = req.body
       if (deviceId && imdbId) {
         await db.createNotification(deviceId, imdbId)
-        status = 200
+        const movies = await store.getUpcoming(deviceId)
+        res.json(movies)
+      } else {
+        res.sendStatus(400)
       }
     } catch(e) {
-      status = 400
-    } finally {
-      res.sendStatus(status)
+      res.sendStatus(400)
     }
   })
 
@@ -56,16 +58,17 @@ async function run() {
       const {deviceId, imdbId} = req.body
       if (deviceId && imdbId) {
         await db.deleteNotification(deviceId, imdbId)
-        status = 200
+        const movies = await store.getUpcoming(deviceId)
+        res.json(movies)
+      } else {
+        res.sendStatus(400)
       }
     } catch(e) {
-      status = 400
-    } finally {
-      res.sendStatus(status)
+      res.sendStatus(400)
     }
   })
 
-app.listen(port, () => console.log(`Server listening on port ${port}`))
+  app.listen(port, () => console.log(`Server listening on port ${port}`))
 }
 
 run()

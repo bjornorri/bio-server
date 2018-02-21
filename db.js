@@ -57,6 +57,13 @@ class DataBase {
     await Notification.destroy({where: {imdbId, deviceId}})
   }
 
+  async notificationsForDevice(deviceId) {
+    const notifications = await Notification.findAll({
+      where: {deviceId: deviceId}
+    })
+    return notifications
+  }
+
   disconnect() {
     this.sequelize.close()
   }
