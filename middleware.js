@@ -8,6 +8,7 @@ class Middleware {
     let movies = data
     movies = this.modifyStructure(movies)
     movies = this.filter(movies)
+    movies = this.fixNullImages(movies)
     movies = await this.addBackdrops(movies)
     movies = this.extractTrailers(movies)
     movies = this.fixCinemaNames(movies)
@@ -44,6 +45,14 @@ class Middleware {
   filter(movies) {
     return movies.filter(m => m.imdb_id)
   }
+
+  fixNullImages(movies) {
+    movies.filter(m => m.poster === 'https://kvikmyndir.is/images/poster/').forEach(m => {
+      m.poster = null
+    })
+    return movies
+  }
+
 
   async addBackdrops(movies) {
     const data = await (Promise.all(movies.map(m => API.getBackdrops(m.imdb_id))))
