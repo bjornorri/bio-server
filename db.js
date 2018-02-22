@@ -64,6 +64,29 @@ class DataBase {
     return notifications
   }
 
+  async notificationTokensForMovie(imdbId) {
+    const notifications = await Notification.findAll({
+      where: {imdbId: imdbId},
+      include: [Device]
+    })
+    const devices = notifications.map(n => n.device)
+    const tokens = devices.map(d => d.apnsToken).filter(t => t !== null)
+    return tokens
+  }
+
+  async deleteSentNotifications(imdbId, tokens) {
+    const tokenSet = new Set(tokens)
+    const notifications = await Notification.findAll({
+      where: {imdbId: imdbId},
+      include: [Device]
+    })
+    notifications.forEach(n => {
+      if (tokenSet.has(n.device.apnsToken)) {
+        n.destroy()
+      }
+    })
+  }
+
   disconnect() {
     this.sequelize.close()
   }

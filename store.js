@@ -1,5 +1,6 @@
 const API = require('./api')
 const db = require('./db')
+const push = require('./push')
 const middleware = require('./middleware')
 
 
@@ -17,6 +18,7 @@ class Store {
     const [showtimes, upcoming] = await (Promise.all([middleware.processShowtimes(stData), middleware.processComingSoon(csData)]))
     this.showtimes = showtimes
     this.upcoming = upcoming
+    push.sendNotifications(showtimes)
   }
 
   async getShowtimes(deviceId = null) {
