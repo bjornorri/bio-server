@@ -32,7 +32,7 @@ class API {
     return res.data
   }
 
-  async getComingSoon() {
+  async getUpcoming() {
     const url = 'http://api.kvikmyndir.is/upcoming';
     const res = await this.request(url)
     return res.data

@@ -25,7 +25,7 @@ class Middleware {
     return movies
   }
 
-  async processComingSoon(data) {
+  async processUpcoming(data) {
     let movies = await this.processMovies(data)
     movies = this.extractReleaseDate(movies)
     movies = this.sortByReleaseDate(movies)
