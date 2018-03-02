@@ -23,10 +23,11 @@ class Push {
   async sendNotificationForMovie(movie) {
     const tokens = await db.notificationTokensForMovie(movie.imdb_id)
     if (tokens.length === 0) { return }
+    const message = movie.premature ? "Er forsýnd í dag" : "Er komin í bíó"
     const notification = new apn.Notification({
       alert: {
         title: movie.title,
-        body: "Er komin í bíó"
+        body: message
       },
       payload: {
         link: `bio://showtimes/${movie.imdb_id}`
@@ -36,8 +37,10 @@ class Push {
       topic: "com.bjornorri.bio"
     })
     this.apnProvider.send(notification, tokens).then(res => {
-      const successTokens = res.sent.map(info => info.device)
-      db.deleteSentNotifications(movie.imdb_id, tokens)
+      if (!movie.premature) {
+        const successTokens = res.sent.map(info => info.device)
+        db.deleteSentNotifications(movie.imdb_id, tokens)
+      }
     })
   }
 
