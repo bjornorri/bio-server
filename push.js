@@ -28,6 +28,9 @@ class Push {
         title: movie.title,
         body: "Er komin í bíó"
       },
+      payload: {
+        link: `bio://showtimes/${movie.imdb_id}`
+      },
       sound: "chime.caf",
       badge: 1,
       topic: "com.bjornorri.bio"
