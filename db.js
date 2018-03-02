@@ -18,6 +18,10 @@ const Device = sequelize.define('device', {
 const Notification = sequelize.define('notification', {
   imdbId: {
     type: Sequelize.STRING
+  },
+  expectedDate: {
+    type: Sequelize.DATEONLY,
+    allowNull: true
   }
 })
 Notification.belongsTo(Device)
@@ -43,13 +47,16 @@ class DataBase {
     }
   }
 
-  async createNotification(deviceId, imdbId) {
+  async createNotification(deviceId, imdbId, expectedDate) {
     const device = await Device.findOrCreate({
       where: {id: deviceId}
     })
-    const notification = await Notification.findOrCreate({
+    const [notification, created] = await Notification.findOrCreate({
       where: {imdbId: imdbId, deviceId: deviceId}
     })
+    if (expectedDate) {
+      await notification.update({expectedDate: expectedDate})
+    }
     return notification
   }
 

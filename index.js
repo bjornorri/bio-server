@@ -40,9 +40,9 @@ async function run() {
 
   app.post('/notify', async (req, res) => {
     try {
-      const {deviceId, imdbId} = req.body
+      const {deviceId, imdbId, expectedDate} = req.body
       if (deviceId && imdbId) {
-        await db.createNotification(deviceId, imdbId)
+        await db.createNotification(deviceId, imdbId, expectedDate)
         const movies = await store.getUpcoming(deviceId)
         res.json(movies)
       } else {
