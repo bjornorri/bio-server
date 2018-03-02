@@ -16,6 +16,7 @@ class Store {
   async fetchData() {
     const [showtimesData, upcomingData] = await (Promise.all([API.getShowtimes(), API.getUpcoming()]));
     const [showtimes, upcoming] = await (Promise.all([middleware.processShowtimes(showtimesData), middleware.processUpcoming(upcomingData)]))
+    this.markPremature(showtimes, upcoming)
     this.showtimes = showtimes
     this.upcoming = upcoming
     push.sendNotifications(showtimes)
@@ -37,6 +38,13 @@ class Store {
       movies = await this.addNotifications(movies, deviceId)
     }
     return movies
+  }
+
+  markPremature(showtimes, upcoming) {
+    const upcomingIds = new Set(upcoming.map(m => m.imdb_id))
+    showtimes.forEach(m => {
+      m.premature = upcomingIds.has(m.imdb_id)
+    })
   }
 
   async addNotifications(movies, deviceId) {
