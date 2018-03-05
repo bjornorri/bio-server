@@ -140,6 +140,7 @@ class Middleware {
               .replace('3D', '')
               .replace('2D', '')
               .replace('ÍSL TAL', '')
+              .replace(' P', 'VIP')
             const matches = roomString.match(/\((.*?)\)/)
             const room = matches ? matches[1].trim() : null
 
