@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const moment = require('moment')
 const API = require('./api')
 
@@ -21,6 +22,7 @@ class Middleware {
   async processShowtimes(data) {
     let movies = await this.processMovies(data)
     movies = this.parseScreenings(movies)
+    movies = this.uniqueScreenings(movies)
     movies = this.sortShowtimes(movies)
     return movies
   }
@@ -148,8 +150,17 @@ class Middleware {
               icelandic: input.includes('ÍSL TAL'),
               room: room
             }
-          })
+          }).filter(s => s.time.isValid())
         }
+      })
+    })
+    return movies
+  }
+
+  uniqueScreenings(movies) {
+    movies.forEach(m => {
+      m.showtimes.forEach(showtime => {
+        showtime.schedule = _.uniqWith(showtime.schedule, _.isEqual)
       })
     })
     return movies
