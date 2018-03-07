@@ -142,7 +142,10 @@ class Middleware {
               .replace('ÍSL TAL', '')
               .replace(' P', 'VIP')
             const matches = roomString.match(/\((.*?)\)/)
-            const room = matches ? matches[1].trim() : null
+            let room = matches ? matches[1].trim() : null
+            if (room === "") {
+              room = null
+            }
 
             return {
               time: moment(input.substring(0, 5), 'HH:mm'),
