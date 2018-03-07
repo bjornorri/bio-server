@@ -10,8 +10,7 @@ class Push {
         key: process.env.APNS_KEY,
         keyId: "N4YAN3AJ73",
         teamId: "5762VEA4LK"
-      },
-      production: false
+      }
     }
     this.apnProvider = new apn.Provider(options);
   }
