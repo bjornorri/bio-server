@@ -22,6 +22,7 @@ class Push {
   async sendNotificationForMovie(movie) {
     const tokens = await db.notificationTokensForMovie(movie.imdb_id)
     if (tokens.length === 0) { return }
+    if (movie.premature) { return  } // TODO: Handle notifications for premature movies.
     const message = movie.premature ? "Er forsýnd í dag" : "Er komin í bíó"
     const notification = new apn.Notification({
       alert: {
